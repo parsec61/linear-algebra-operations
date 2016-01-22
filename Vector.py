@@ -1,3 +1,5 @@
+import math
+
 class Vector(object):
   def __init__(self, coordinates):
     try:
@@ -23,6 +25,15 @@ class Vector(object):
   def times_scalar(self, s):
     new_coordinates = [x*s for x in self.coordinates]
     return Vector(new_coordinates)
+
+  def magnitude(self):
+    magnitude = 0
+    for x in range(len(self.coordinates)):
+      magnitude = magnitude + self.coordinates[x]**2
+    return math.sqrt(magnitude)
+
+  def normalize(self):
+    return self.times_scalar(1/self.magnitude())
   
   def __str__(self):
     return 'Vector: {}'.format(self.coordinates)
