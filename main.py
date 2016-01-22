@@ -28,3 +28,23 @@ print(my_vector7.magnitude())
 print(my_vector8.normalize())
 
 print(my_vector9.normalize())
+
+my_vector10 = Vector.Vector([7.887, 4.138])
+my_vector11 = Vector.Vector([-8.802, 6.776])
+
+print(my_vector10.dot(my_vector11))
+
+my_vector12 = Vector.Vector([-5.955, -4.904, -1.874])
+my_vector13 = Vector.Vector([-4.496, -8.755, 7.103])
+
+print(my_vector12.dot(my_vector13))
+
+my_vector14 = Vector.Vector([3.183, -7.627])
+my_vector15 = Vector.Vector([-2.668, 5.319])
+
+print(my_vector14.angle_with(my_vector15))
+
+my_vector16 = Vector.Vector([7.35, 0.221, 5.188])
+my_vector17 = Vector.Vector([2.751, 8.259, 3.985])
+
+print(my_vector16.angle_with(my_vector17, True))
