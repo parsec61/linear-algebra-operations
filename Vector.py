@@ -6,6 +6,8 @@ getcontext().prec = 30
 class Vector(object):
 
   CANNOT_NORMALIZE_ZERO_VECTOR_MSG = 'Cannot normalize the zero vector'
+  NO_UNIQUE_PARALLEL_COMPONENT_MSG = 'No unique parallel component'
+  NO_UNIQUE_ORTHOGONAL_COMPONENT_MSG = 'No unique orthogonal component'
   
   def __init__(self, coordinates):
     try:
@@ -63,7 +65,7 @@ class Vector(object):
       else:
         raise e
 
-  def is_parallel(self, v):
+  def is_parallel_to(self, v):
     return (self.is_zero() or
             v.is_zero() or
             self.angle_with(v) == 0 or
@@ -74,6 +76,49 @@ class Vector(object):
 
   def is_zero(self, tolerance = 1e-10):
     return self.magnitude() < tolerance
+
+  def component_parallel_to(self, basis): # (x*v / v*v) v
+    try:
+      return basis.times_scalar(self.dot(basis)/basis.dot(basis))
+
+    except Exception as e:
+      raise e
+
+  def component_orthogonal_to(self, basis): # A - projB(A)
+    try:
+      projection = self.component_parallel_to(basis)
+      return self.minus(projection)
+    except Exception as e:
+      if str(e) == self.NO_UNIQUE_PARALLEL_COMPONENT_MSG:
+        raise Exception(self.NO_UNIQUE_ORTHOGONAL_COMPONENT_MSG)
+      else:
+        raise e
+
+  def cross(self, v):
+      try:
+        x_1, y_1, z_1 = self.coordinates
+        x_2, y_2, z_2 = v.coordinates
+        new_coordinates = [ y_1*z_2 - y_2*z_1,
+                          -(x_1*z_2 - x_2*z_1),
+                            x_1*y_2 - x_2*y_1]
+        return Vector(new_coordinates)
+      except ValueError as e:
+        msg = str(e)
+        if msg == 'need more than 2 values to unpack':
+          self_embedded_in_R3 = Vector(self.coordinates + ('0',))
+          v_embedded_in_R3 = Vector(v.coordinates + ('0',))
+          return self_embedded_in_R3.cross(v_embedded_in_R3)
+        elif (msg == 'too many values to unpack' or
+              msg == 'need more than 1 value to unpack'):
+          raise Exception(self.ONLY_DEFINED_IN_TWO_THREE_DIMS_MSG)
+        else:
+          raise e
+
+  def area_of_parallelogram(self, v):
+    return self.cross(v).magnitude()
+
+  def area_of_triangle(self, v):
+    return self.area_of_parallelogram(v) / Decimal('2.0')
   
   def __str__(self):
     return 'Vector: {}'.format(self.coordinates)

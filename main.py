@@ -54,23 +54,57 @@ my_vector17 = Vector.Vector([2.751, 8.259, 3.985])
 my_vector18 = Vector.Vector(['-7.579', '-7.88'])
 my_vector19 = Vector.Vector(['22.737', '23.64'])
 
-print(my_vector18.is_parallel(my_vector19))
-print(my_vector18.is_orthogonal_to(my_vector19))
+#print(my_vector18.is_parallel_to(my_vector19))
+#print(my_vector18.is_orthogonal_to(my_vector19))
 
 my_vector20 = Vector.Vector(['-2.029', '9.97', '4.172'])
 my_vector21 = Vector.Vector(['-9.231', '-6.639', '-7.245'])
 
-print(my_vector20.is_parallel(my_vector21))
-print(my_vector20.is_orthogonal_to(my_vector21))
+#print(my_vector20.is_parallel_to(my_vector21))
+#print(my_vector20.is_orthogonal_to(my_vector21))
 
 my_vector22 = Vector.Vector(['-2.328', '-7.284', '-1.214'])
 my_vector23 = Vector.Vector(['-1.821', '1.072', '-2.94'])
 
-print(my_vector22.is_parallel(my_vector23))
-print(my_vector22.is_orthogonal_to(my_vector23))
+#print(my_vector22.is_parallel_to(my_vector23))
+#print(my_vector22.is_orthogonal_to(my_vector23))
 
 my_vector24 = Vector.Vector(['2.118', '4.827'])
 my_vector25 = Vector.Vector(['0', '0'])
 
-print(my_vector24.is_parallel(my_vector25))
-print(my_vector24.is_orthogonal_to(my_vector25))
+#print(my_vector24.is_parallel_to(my_vector25))
+#print(my_vector24.is_orthogonal_to(my_vector25))
+
+my_vector1 = Vector.Vector([3.039, 1.879])
+my_vector2 = Vector.Vector([0.825, 2.036])
+
+#print(my_vector1.component_parallel_to(my_vector2))
+
+my_vector1 = Vector.Vector([-9.88, -3.264, -8.159])
+my_vector2 = Vector.Vector([-2.155, -9.353, -9.473])
+
+#print(my_vector1.component_orthogonal_to(my_vector2))
+
+my_vector1 = Vector.Vector([3.009, -6.172, 3.692, -2.51])
+my_vector2 = Vector.Vector([6.404, -9.144, 2.759, 8.718])
+
+#print(my_vector1.component_parallel_to(my_vector2))
+#print(my_vector1.component_orthogonal_to(my_vector2))
+
+v1 = Vector.Vector([8.462, 7.893, -8.187])
+v2 = Vector.Vector([6.984, -5.975, 4.778])
+
+print(v1.cross(v2))
+
+v1 = Vector.Vector([-8.987, -9.838, 5.031])
+v2 = Vector.Vector([-4.268, -1.861, -8.866])
+
+print(v1.area_of_parallelogram(v2))
+
+v1 = Vector.Vector([1.5, 9.547, 3.691])
+v2 = Vector.Vector([-6.007, 0.124, 5.772])
+
+print(v1.area_of_triangle(v2))
+
+
+
