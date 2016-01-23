@@ -1,4 +1,4 @@
-from math import sqrt, degrees, acos
+from math import sqrt, degrees, acos, pi
 from decimal import Decimal, getcontext
 
 getcontext().prec = 30
@@ -33,26 +33,22 @@ class Vector(object):
     return Vector(new_coordinates)
 
   def magnitude(self):
-    coordinates_squared = [x**2 for x in self.coordinates]
-    return sqrt(sum(coordinates_squared))
+    coordinates_squared = [x**Decimal('2.0') for x in self.coordinates]
+    return Decimal(sqrt(sum(coordinates_squared)))
 
   def normalize(self):
     try:
       magnitude = self.magnitude()
-      return self.times_scalar(1./magnitude)
+      return self.times_scalar(Decimal('1.0')/magnitude)
 
     except ZeroDivisionError:
       raise Exeption(self.CANNOT_NORMALIZE_ZERO_VECTOR_MSG)
 
   def dot(self, v): #v1*w1 + v2*w2 + ... + vn*wn
-    return sum([x*y for x,y in zip(self.coordinates, v.coordinates)])
+    return round(sum([x*y for x,y in zip(self.coordinates, v.coordinates)]), 10)
 
-  def angle_with(self, v, in_deg = False): #arc cosine (dot product / (magnitudeV * magnitudeW))
+  def angle_with(self, v, in_deg = False):
     try:
-      #dot = self.dot(v)
-      #magnitude_s = self.magnitude()
-      #magnitude_v = v.magnitude()
-      #angle = acos(dot/(magnitude_s*magnitude_v))
       u1 = self.normalize()
       u2 = v.normalize()
       angle = acos(u1.dot(u2))
@@ -67,9 +63,17 @@ class Vector(object):
       else:
         raise e
 
-  def is_parallel():
+  def is_parallel(self, v):
+    return (self.is_zero() or
+            v.is_zero() or
+            self.angle_with(v) == 0 or
+            self.angle_with(v) == pi)
 
-  def is_orthogonal():
+  def is_orthogonal_to(self, v, tolerance = 1e-10):
+    return abs(self.dot(v)) < tolerance
+
+  def is_zero(self, tolerance = 1e-10):
+    return self.magnitude() < tolerance
   
   def __str__(self):
     return 'Vector: {}'.format(self.coordinates)
