@@ -1,4 +1,7 @@
 import Vector
+from Line import Line
+from Plane import Plane
+
 
 my_vector1 = Vector.Vector([8.218, -9.341])
 my_vector2 = Vector.Vector([-1.129, 2.111])
@@ -94,17 +97,56 @@ my_vector2 = Vector.Vector([6.404, -9.144, 2.759, 8.718])
 v1 = Vector.Vector([8.462, 7.893, -8.187])
 v2 = Vector.Vector([6.984, -5.975, 4.778])
 
-print(v1.cross(v2))
+#print(v1.cross(v2))
 
 v1 = Vector.Vector([-8.987, -9.838, 5.031])
 v2 = Vector.Vector([-4.268, -1.861, -8.866])
 
-print(v1.area_of_parallelogram(v2))
+#print(v1.area_of_parallelogram(v2))
 
 v1 = Vector.Vector([1.5, 9.547, 3.691])
 v2 = Vector.Vector([-6.007, 0.124, 5.772])
 
-print(v1.area_of_triangle(v2))
+#print(v1.area_of_triangle(v2))
+
+##l1 = Line(['4.046', '2.836'], '1.21')
+##l2 = Line(['10.115', '7.09'], '3.025')
+##
+##print(l1.is_parallel_to(l2))
+##print(l1 == l2)
+##print(l1.intersection_with(l2))
+##
+##l1 = Line(['7.204', '3.182'], '8.68')
+##l2 = Line(['8.172', '4.114'], '9.883')
+##
+##print(l1.is_parallel_to(l2))
+##print(l1 == l2)
+##print(l1.intersection_with(l2))
+##
+##l1 = Line(['1.182', '5.562'], '6.744')
+##l2 = Line(['1.773', '8.343'], '9.525')
+
+#print(l1.is_parallel_to(l2))
+#print(l1 == l2)
+#print(l1.intersection_with(l2))
+
+p1 = Plane(['-0.412', '3.806', '0.728'], '-3.46')
+p2 = Plane(['1.03', '-9.515', '-1.82'], '8.65')
+
+print(p1.is_parallel_to(p2))
+print(p1 == p2)
+
+p1 = Plane(['2.611', '5.528', '0.283'], '4.6')
+p2 = Plane(['7.715', '8.306', '5.342'], '3.76')
+
+print(p1.is_parallel_to(p2))
+print(p1 == p2)
+
+p1 = Plane(['-7.926', '8.625', '-7.217'], '-7.952')
+p2 = Plane(['-2.642', '2.875', '-2.404'], '-2.443')
+
+print(p1.is_parallel_to(p2))
+print(p1 == p2)
 
 
 

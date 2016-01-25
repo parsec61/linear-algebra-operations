@@ -8,6 +8,7 @@ class Vector(object):
   CANNOT_NORMALIZE_ZERO_VECTOR_MSG = 'Cannot normalize the zero vector'
   NO_UNIQUE_PARALLEL_COMPONENT_MSG = 'No unique parallel component'
   NO_UNIQUE_ORTHOGONAL_COMPONENT_MSG = 'No unique orthogonal component'
+  ONLY_DEFINED_IN_TWO_THREE_DIMS_MSG = 'Only defined in two and three dims'
   
   def __init__(self, coordinates):
     try:
@@ -35,19 +36,23 @@ class Vector(object):
     return Vector(new_coordinates)
 
   def magnitude(self):
-    coordinates_squared = [x**Decimal('2.0') for x in self.coordinates]
-    return Decimal(sqrt(sum(coordinates_squared)))
+    sum_coordinates = sum([x**Decimal('2.0') for x in self.coordinates])
+    return Decimal(sqrt(sum_coordinates))
 
   def normalize(self):
     try:
-      magnitude = self.magnitude()
-      return self.times_scalar(Decimal('1.0')/magnitude)
+      return self.times_scalar(Decimal('1.0')/self.magnitude())
 
     except ZeroDivisionError:
       raise Exeption(self.CANNOT_NORMALIZE_ZERO_VECTOR_MSG)
 
   def dot(self, v): #v1*w1 + v2*w2 + ... + vn*wn
-    return round(sum([x*y for x,y in zip(self.coordinates, v.coordinates)]), 10)
+    dot = sum([x*y for x,y in zip(self.coordinates, v.coordinates)])
+
+    if MyDecimal.is_near_one(dot):
+      return Decimal('1.0')
+    else:
+      return dot
 
   def angle_with(self, v, in_deg = False):
     try:
@@ -126,4 +131,10 @@ class Vector(object):
   def __eq__(self, v):
     return self.coordinates == v.coordinates
 
-    
+
+class MyDecimal(Decimal):
+  def is_near_zero(self, eps=1e-10):
+    return abs(self) < eps
+
+  def is_near_one(self, eps=1e-6):
+    return abs(self) > Decimal('1.0')-Decimal(eps)
