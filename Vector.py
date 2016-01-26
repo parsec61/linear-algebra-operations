@@ -23,22 +23,35 @@ class Vector(object):
     except TypeError:
       raise ValueError('The coordinates must be an iterable')
 
-  def plus(self, v):
-    new_coordinates = [x+y for x,y in zip(self.coordinates, v.coordinates)]
-    return Vector(new_coordinates)
+  #magnitude ||v|| of vector sqrt(x^2 + y^2)
+  def magnitude(self): 
+    sum_coordinates = sum([x**Decimal('2.0') for x in self.coordinates])
+    return Decimal(sqrt(sum_coordinates))
 
+  #scale vector (c*x, c*y) where c = scaler
+  def times_scalar(self, c, is_return_list = False):
+    new_coordinates = [Decimal(c)*x for x in self.coordinates]
+
+    if is_return_list:
+      return new_coordinates
+    else:
+      return Vector(new_coordinates)
+
+  #add vectors (x1+x2, y1+y2)
+  def plus(self, v, is_return_list = False):
+    new_coordinates = [x+y for x,y in zip(self.coordinates, v.coordinates)]
+
+    if is_return_list:
+      return new_coordinates
+    else:
+      return Vector(new_coordinates)
+
+  #subtract vectors (x1-x2, y1-y2)
   def minus(self, v):
     new_coordinates = [x-y for x,y in zip(self.coordinates, v.coordinates)]
     return Vector(new_coordinates)
 
-  def times_scalar(self, c):
-    new_coordinates = [Decimal(c)*x for x in self.coordinates]
-    return Vector(new_coordinates)
-
-  def magnitude(self):
-    sum_coordinates = sum([x**Decimal('2.0') for x in self.coordinates])
-    return Decimal(sqrt(sum_coordinates))
-
+  #find unit vector (magnitude = 1) (x/sqrt(x^2 + y^2), y/sqrt(x^2 + y^2))
   def normalize(self):
     try:
       return self.times_scalar(Decimal('1.0')/self.magnitude())
@@ -46,7 +59,8 @@ class Vector(object):
     except ZeroDivisionError:
       raise Exeption(self.CANNOT_NORMALIZE_ZERO_VECTOR_MSG)
 
-  def dot(self, v): #v1*w1 + v2*w2 + ... + vn*wn
+  #dot product v1*w1 + v2*w2 + ... + vn*wn
+  def dot(self, v):
     dot = sum([x*y for x,y in zip(self.coordinates, v.coordinates)])
 
     if MyDecimal.is_near_one(dot):

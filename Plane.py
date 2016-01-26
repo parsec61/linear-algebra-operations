@@ -96,8 +96,8 @@ class Plane(object):
 
         try:
             initial_index = Plane.first_nonzero_index(n)
-            terms = [write_coefficient(n[i], is_initial_term=(i==initial_index)) + 'x_{}'.format(i+1)
-                     for i in range(self.dimension) if round(n[i], num_decimal_places) != 0]
+            terms = [write_coefficient(Decimal(n[i]), is_initial_term=(i==initial_index)) + 'x_{}'.format(i+1)
+                     for i in range(self.dimension) if round(Decimal(n[i]), int(num_decimal_places)) != 0]
             output = ' '.join(terms)
 
         except Exception as e:

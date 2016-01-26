@@ -1,6 +1,7 @@
 import Vector
 from Line import Line
 from Plane import Plane
+from Linsys import Linsys
 
 
 my_vector1 = Vector.Vector([8.218, -9.341])
