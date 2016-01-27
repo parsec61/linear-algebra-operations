@@ -15,7 +15,7 @@ class Vector(object):
       if not coordinates:
         raise ValueError
       self.coordinates = tuple([Decimal(x) for x in coordinates])
-      self.demension = len(self.coordinates)
+      self.dimension = len(self.coordinates)
     
     except ValueError:
       raise ValueError('The coordinates must be nonempty')
@@ -68,6 +68,7 @@ class Vector(object):
     else:
       return dot
 
+  #
   def angle_with(self, v, in_deg = False):
     try:
       u1 = self.normalize()
@@ -90,6 +91,7 @@ class Vector(object):
             self.angle_with(v) == 0 or
             self.angle_with(v) == pi)
 
+  #if dot product is 0
   def is_orthogonal_to(self, v, tolerance = 1e-10):
     return abs(self.dot(v)) < tolerance
 

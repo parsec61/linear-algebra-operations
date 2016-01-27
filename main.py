@@ -1,7 +1,7 @@
 import Vector
 from Line import Line
 from Plane import Plane
-from Linsys import Linsys
+from Linsys import LinearSystem
 
 
 my_vector1 = Vector.Vector([8.218, -9.341])
@@ -131,23 +131,235 @@ v2 = Vector.Vector([-6.007, 0.124, 5.772])
 #print(l1 == l2)
 #print(l1.intersection_with(l2))
 
-p1 = Plane(['-0.412', '3.806', '0.728'], '-3.46')
-p2 = Plane(['1.03', '-9.515', '-1.82'], '8.65')
+##p1 = Plane(['-0.412', '3.806', '0.728'], '-3.46')
+##p2 = Plane(['1.03', '-9.515', '-1.82'], '8.65')
+##
+##print(p1.is_parallel_to(p2))
+##print(p1 == p2)
+##
+##p1 = Plane(['2.611', '5.528', '0.283'], '4.6')
+##p2 = Plane(['7.715', '8.306', '5.342'], '3.76')
+##
+##print(p1.is_parallel_to(p2))
+##print(p1 == p2)
+##
+##p1 = Plane(['-7.926', '8.625', '-7.217'], '-7.952')
+##p2 = Plane(['-2.642', '2.875', '-2.404'], '-2.443')
+##
+##print(p1.is_parallel_to(p2))
+##print(p1 == p2)
+##
+##p0 = Plane(['1','1','1'], '1')
+##p1 = Plane(['0','1','0'], '2')
+##p2 = Plane(['1','1','-1'], '3')
+##p3 = Plane(['1','0','-2'], '2')
+##
+##s = LinearSystem([p0,p1,p2,p3])
 
-print(p1.is_parallel_to(p2))
-print(p1 == p2)
+#print (s.indices_of_first_nonzero_terms_in_each_row())
+#print ('{},{},{},{}'.format(s[0],s[1],s[2],s[3]))
+#print (len(s))
+#print (s)
+#print("------")
 
-p1 = Plane(['2.611', '5.528', '0.283'], '4.6')
-p2 = Plane(['7.715', '8.306', '5.342'], '3.76')
+#s[0] = p1
+#print (s[0])
 
-print(p1.is_parallel_to(p2))
-print(p1 == p2)
+#s.swap_rows(0,1)
+#print(s)
 
-p1 = Plane(['-7.926', '8.625', '-7.217'], '-7.952')
-p2 = Plane(['-2.642', '2.875', '-2.404'], '-2.443')
+#print(s[0])
+#s.multiply_coefficient_and_row(2, 0)
+#print(s[0])
 
-print(p1.is_parallel_to(p2))
-print(p1 == p2)
+#print (MyDecimal('1e-9').is_near_zero())
+#print (MyDecimal('1e-11').is_near_zero())
 
 
 
+##p0 = Plane(['1','1','1'], '1')
+##p1 = Plane(['0','1','0'], '2')
+##p2 = Plane(['1','1','-1'], '3')
+##p3 = Plane(['1','0','-2'], '2')
+##
+##s = LinearSystem([p0,p1,p2,p3])
+##s.swap_rows(0,1)
+##if not (s[0] == p1 and s[1] == p0 and s[2] == p2 and s[3] == p3):
+##    print ('test case 1 failed')
+##
+##s.swap_rows(1,3)
+##if not (s[0] == p1 and s[1] == p3 and s[2] == p2 and s[3] == p0):
+##    print ('test case 2 failed')
+##
+##s.swap_rows(3,1)
+##if not (s[0] == p1 and s[1] == p0 and s[2] == p2 and s[3] == p3):
+##    print ('test case 3 failed')
+##
+##s.multiply_coefficient_and_row(1,0)
+##if not (s[0] == p1 and s[1] == p0 and s[2] == p2 and s[3] == p3):
+##    print ('test case 4 failed')
+##
+##s.multiply_coefficient_and_row(-1,2)
+##if not (s[0] == p1 and
+##        s[1] == p0 and
+##        s[2] == Plane(['-1','-1','1'], '-3') and
+##        s[3] == p3):
+##    print ('test case 5 failed')
+##
+##s.multiply_coefficient_and_row(10,1)
+##if not (s[0] == p1 and
+##        s[1] == Plane(['10','10','10'], '10') and
+##        s[2] == Plane(['-1','-1','1'], '-3') and
+##        s[3] == p3):
+##    print ('test case 6 failed')
+##
+##s.add_multiple_times_row_to_row(0,0,1)
+##if not (s[0] == p1 and
+##        s[1] == Plane(['10','10','10'], '10') and
+##        s[2] == Plane(['-1','-1','1'], '-3') and
+##        s[3] == p3):
+##    print ('test case 7 failed')
+##
+##s.add_multiple_times_row_to_row(1,0,1)
+##if not (s[0] == p1 and
+##        s[1] == Plane(['10','11','10'], '12') and
+##        s[2] == Plane(['-1','-1','1'], '-3') and
+##        s[3] == p3):
+##    print ('test case 8 failed')
+##
+##s.add_multiple_times_row_to_row(-1,1,0)
+##if not (s[0] == Plane(['-10','-10','-10'], '-10') and
+##        s[1] == Plane(['10','11','10'], '12') and
+##        s[2] == Plane(['-1','-1','1'], '-3') and
+##        s[3] == p3):
+##    print ('test case 9 failed')
+
+
+##p1 = Plane(['1','1','1'], '1')
+##p2 = Plane(['0','1','1'], '2')
+##s = LinearSystem([p1,p2])
+##t = s.compute_triangular_form()
+##if not (t[0] == p1 and t[1] == p2):
+##    print ('test case 1 failed')
+##
+##p1 = Plane(['1','1','1'], '1')
+##p2 = Plane(['1','1','1'], '2')
+##s = LinearSystem([p1,p2])
+##t = s.compute_triangular_form()
+##if not (t[0] == p1 and
+##        t[1] == Plane(['0','0','0'], '1')):
+##    print ('test case 2 failed')
+##
+##p1 = Plane(['1','1','1'], '1')
+##p2 = Plane(['0','1','0'], '2')
+##p3 = Plane(['1','1','-1'], '3')
+##p4 = Plane(['1','0','-2'], '2')
+##s = LinearSystem([p1,p2,p3,p4])
+##t = s.compute_triangular_form()
+##if not (t[0] == p1 and
+##        t[1] == p2 and
+##        t[2] == Plane(['0','0','-2'], '2') and
+##        t[3] == Plane(['0','0','0'], '0')):
+##    print ('test case 3 failed')
+##
+##p1 = Plane(['0','1','1'], '1')
+##p2 = Plane(['1','-1','1'], '2')
+##p3 = Plane(['1','2','-5'], '3')
+##s = LinearSystem([p1,p2,p3])
+##t = s.compute_triangular_form()
+##if not (t[0] == Plane(['1','-1','1'], '2') and
+##        t[1] == Plane(['0','1','1'], '1') and
+##        t[2] == Plane(['0','0','-9'], '-2')):
+##    print ('test case 4 failed')
+##
+##
+##p1 = Plane(['1','1','1'], '1')
+##p2 = Plane(['0','1','1'], '2')
+##s = LinearSystem([p1,p2])
+##r = s.compute_rref()
+##if not (r[0] == Plane(['1','0','0'], '-1') and
+##        r[1] == p2):
+##    print ('test case 1 failed')
+##
+##p1 = Plane(['1','1','1'], '1')
+##p2 = Plane(['1','1','1'], '2')
+##s = LinearSystem([p1,p2])
+##r = s.compute_rref()
+##if not (r[0] == p1 and
+##        r[1] == Plane(['0','0','0'], '1')):
+##    print ('test case 2 failed')
+##
+##p1 = Plane(['1','1','1'], '1')
+##p2 = Plane(['0','1','0'], '2')
+##p3 = Plane(['1','1','-1'], '3')
+##p4 = Plane(['1','0','-2'], '2')
+##s = LinearSystem([p1,p2,p3,p4])
+##r = s.compute_rref()
+##if not (r[0] == Plane(['1','0','0'], '0') and
+##        r[1] == p2 and
+##        r[2] == Plane(['0','0','-2'], '2') and
+##        r[3] == Plane(['0','0','0'], '0')):
+##    print ('test case 3 failed')
+##
+##p1 = Plane(['0','1','1'], '1')
+##p2 = Plane(['1','-1','1'], '2')
+##p3 = Plane(['1','2','-5'], '3')
+##s = LinearSystem([p1,p2,p3])
+##r = s.compute_rref()
+##if not (r[0] == Plane(['1','0','0'], Decimal('23')/Decimal('9')) and
+##        r[1] == Plane(['0','1','0'], Decimal('7')/Decimal('9')) and
+##        r[2] == Plane(['0','0','1'], Decimal('2')/Decimal('9'))):
+##    print ('test case 4 failed')
+
+p1 = Plane(['5.862', '1.178', '-10.366'], '-8.15')
+p2 = Plane(['-2.931', '-0.589', '5.183'], '-4.075')
+#s = LinearSystem([p1,p2])
+
+#r = s.compute_solution()
+#print(r)
+
+p1 = Plane(['8.631', '5.112', '-1.816'], '-5.113')
+p2 = Plane(['4.315', '11.132', '-5.27'], '-6.775')
+p3 = Plane(['-2.158', '3.01', '-1.727'], '-0.831')
+#s = LinearSystem([p1,p2,p3])
+
+#r = s.compute_rref()
+#r = s.compute_solution()
+#print(r)
+
+p1 = Plane(['5.262', '2.739', '-9.878'], '-3.441')
+p2 = Plane(['5.111', '6.358', '7.638'], '-2.152')
+p3 = Plane(['2.016', '-9.924', '-1.367'], '-9.278')
+p4 = Plane(['2.167', '-13.543', '-18.883'], '-10.567')
+#s = LinearSystem([p1,p2,p3,p4])
+
+#r = s.compute_solution()
+#print(r)
+
+
+
+p1 = Plane(['0.786', '0.786', '0.588'], '-0.714')
+p2 = Plane(['-0.138', '-0.138', '0.244'], '0.319')
+s = LinearSystem([p1,p2])
+
+r = s.compute_solution()
+
+
+print(r)
+
+p1 = Plane(['8.631', '5.112', '-1.816'], '-5.113')
+p2 = Plane(['4.315', '11.132', '-5.27'], '-6.775')
+p3 = Plane(['-2.158', '3.01', '-1.727'], '-0.831')
+s = LinearSystem([p1,p2,p3])
+
+r = s.compute_solution()
+print(r)
+
+p1 = Plane(['0.935', '1.76', '-9.365'], '-9.955')
+p2 = Plane(['0.187', '0.352', '-1.873'], '-1.991')
+p3 = Plane(['0.374', '0.704', '-3.746'], '-3.982')
+p4 = Plane(['-0.561', '-1.056', '5.619'], '5.973')
+s = LinearSystem([p1,p2,p3,p4])
+
+r = s.compute_solution()
+print(r)

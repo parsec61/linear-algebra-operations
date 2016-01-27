@@ -3,9 +3,9 @@ from copy import deepcopy
 
 from Vector import Vector
 from Plane import Plane
+from Hyperplane import Hyperplane
 
 getcontext().prec = 30
-
 
 class LinearSystem(object):
 
@@ -87,6 +87,78 @@ class LinearSystem(object):
             
         return tf
 
+    def compute_solution(self):
+        try:
+            return self.do_gaussian_elimination_and_parametrize_solution()
+
+        except Exception as e:
+            if str(e) == self.NO_SOLUTIONS_MSG:
+                return str(e)
+            else:
+                raise e
+
+    def do_gaussian_elimination_and_parametrize_solution(self):
+        rref = self.compute_rref()
+
+        rref.raise_exception_if_contradictory_equation()
+
+        direction_vectors = rref.extract_direction_vectors_for_parametrization()
+        basepoint = rref.extract_basepoint_for_parametrization()
+
+        return Parametrization(basepoint, direction_vectors)
+
+    def extract_direction_vectors_for_parametrization(self):
+        n = self.dimension
+        pivot_indices = self.indices_of_first_nonzero_terms_in_each_row()
+        free_variable_indices = set(range(n)) - set(pivot_indices)
+
+        direction_vectors = []
+
+        for free_var in free_variable_indices:
+            vector_coords = [0] * n
+            vector_coords[free_var] = 1
+            for i,p in enumerate(self.planes):
+                pivot_var = pivot_indices[i]
+                if pivot_var < 0:
+                    break
+                vector_coords[pivot_var] = -p.normal_vector[free_var]
+            direction_vectors.append(Vector(vector_coords))
+        return direction_vectors
+
+    def extract_basepoint_for_parametrization(self):
+        n = self.dimension
+        pivot_indices = self.indices_of_first_nonzero_terms_in_each_row()
+
+        basepoint_coords = [0] * n
+
+        for i,p in enumerate(self.planes):
+            pivot_var = pivot_indices[i]
+            if pivot_var < 0:
+                break
+            basepoint_coords[pivot_var] = p.constant_term
+
+        return Vector(basepoint_coords)
+
+    def raise_exception_if_contradictory_equation(self):
+        for p in self.planes:
+            try:
+                p.first_nonzero_index(p.normal_vector)
+            except Exception as e:
+                if str(e) == 'No nonzero elements found':
+                    constant_term = MyDecimal(p.constant_term)
+                    if not constant_term.is_near_zero():
+                        raise Exception(self.NO_SOLUTIONS_MSG)
+                else:
+                    raise e
+                    
+    def raise_exception_if_too_few_pivots(self):
+        pivot_indices = self.indices_of_first_nonzero_terms_in_each_row()
+        num_pivots = sum([1 if index >= 0 else 0 for index in pivot_indices])
+        n = self.dimension
+
+        if num_pivots < n:
+            raise Exception(self.INF_SOLUTIONS_MSG)
+
     def scale_row_to_make_coefficient_equal_one(self, row, col):
         n = self[row].normal_vector
         beta = Decimal('1.0') / Decimal(n[col])
@@ -159,170 +231,23 @@ class LinearSystem(object):
         ret += '\n'.join(temp)
         return ret
 
+class Parametrization(object):
+
+    BASE_AND_DIR_VECTOR_MUST_BE_IN_SAME_DIM_MSG = ("The basepoint and direction vectors should all live in the same dimension")
+
+    def __init__(self, basepoint, direction_vectors):
+        self.basepoint = basepoint
+        self.direction_vectors = direction_vectors
+        self.dimension = self.basepoint.dimension
+
+        try:
+            for v in direction_vectors:
+                assert v.dimension == self.dimension
+
+        except AssertionError:
+            raise Exception(BASE_AND_DIR_VECTOR_MUST_BE_IN_SAME_DIM_MSG)
 
 class MyDecimal(Decimal):
     def is_near_zero(self, eps=1e-10):
         return abs(self) < eps
 
-
-p0 = Plane(['1','1','1'], '1')
-p1 = Plane(['0','1','0'], '2')
-p2 = Plane(['1','1','-1'], '3')
-p3 = Plane(['1','0','-2'], '2')
-
-s = LinearSystem([p0,p1,p2,p3])
-
-#print (s.indices_of_first_nonzero_terms_in_each_row())
-#print ('{},{},{},{}'.format(s[0],s[1],s[2],s[3]))
-#print (len(s))
-#print (s)
-#print("------")
-
-#s[0] = p1
-#print (s[0])
-
-#s.swap_rows(0,1)
-#print(s)
-
-#print(s[0])
-#s.multiply_coefficient_and_row(2, 0)
-#print(s[0])
-
-#print (MyDecimal('1e-9').is_near_zero())
-#print (MyDecimal('1e-11').is_near_zero())
-
-
-
-##p0 = Plane(['1','1','1'], '1')
-##p1 = Plane(['0','1','0'], '2')
-##p2 = Plane(['1','1','-1'], '3')
-##p3 = Plane(['1','0','-2'], '2')
-##
-##s = LinearSystem([p0,p1,p2,p3])
-##s.swap_rows(0,1)
-##if not (s[0] == p1 and s[1] == p0 and s[2] == p2 and s[3] == p3):
-##    print ('test case 1 failed')
-##
-##s.swap_rows(1,3)
-##if not (s[0] == p1 and s[1] == p3 and s[2] == p2 and s[3] == p0):
-##    print ('test case 2 failed')
-##
-##s.swap_rows(3,1)
-##if not (s[0] == p1 and s[1] == p0 and s[2] == p2 and s[3] == p3):
-##    print ('test case 3 failed')
-##
-##s.multiply_coefficient_and_row(1,0)
-##if not (s[0] == p1 and s[1] == p0 and s[2] == p2 and s[3] == p3):
-##    print ('test case 4 failed')
-##
-##s.multiply_coefficient_and_row(-1,2)
-##if not (s[0] == p1 and
-##        s[1] == p0 and
-##        s[2] == Plane(['-1','-1','1'], '-3') and
-##        s[3] == p3):
-##    print ('test case 5 failed')
-##
-##s.multiply_coefficient_and_row(10,1)
-##if not (s[0] == p1 and
-##        s[1] == Plane(['10','10','10'], '10') and
-##        s[2] == Plane(['-1','-1','1'], '-3') and
-##        s[3] == p3):
-##    print ('test case 6 failed')
-##
-##s.add_multiple_times_row_to_row(0,0,1)
-##if not (s[0] == p1 and
-##        s[1] == Plane(['10','10','10'], '10') and
-##        s[2] == Plane(['-1','-1','1'], '-3') and
-##        s[3] == p3):
-##    print ('test case 7 failed')
-##
-##s.add_multiple_times_row_to_row(1,0,1)
-##if not (s[0] == p1 and
-##        s[1] == Plane(['10','11','10'], '12') and
-##        s[2] == Plane(['-1','-1','1'], '-3') and
-##        s[3] == p3):
-##    print ('test case 8 failed')
-##
-##s.add_multiple_times_row_to_row(-1,1,0)
-##if not (s[0] == Plane(['-10','-10','-10'], '-10') and
-##        s[1] == Plane(['10','11','10'], '12') and
-##        s[2] == Plane(['-1','-1','1'], '-3') and
-##        s[3] == p3):
-##    print ('test case 9 failed')
-
-
-p1 = Plane(['1','1','1'], '1')
-p2 = Plane(['0','1','1'], '2')
-s = LinearSystem([p1,p2])
-t = s.compute_triangular_form()
-if not (t[0] == p1 and t[1] == p2):
-    print ('test case 1 failed')
-
-p1 = Plane(['1','1','1'], '1')
-p2 = Plane(['1','1','1'], '2')
-s = LinearSystem([p1,p2])
-t = s.compute_triangular_form()
-if not (t[0] == p1 and
-        t[1] == Plane(['0','0','0'], '1')):
-    print ('test case 2 failed')
-
-p1 = Plane(['1','1','1'], '1')
-p2 = Plane(['0','1','0'], '2')
-p3 = Plane(['1','1','-1'], '3')
-p4 = Plane(['1','0','-2'], '2')
-s = LinearSystem([p1,p2,p3,p4])
-t = s.compute_triangular_form()
-if not (t[0] == p1 and
-        t[1] == p2 and
-        t[2] == Plane(['0','0','-2'], '2') and
-        t[3] == Plane(['0','0','0'], '0')):
-    print ('test case 3 failed')
-
-p1 = Plane(['0','1','1'], '1')
-p2 = Plane(['1','-1','1'], '2')
-p3 = Plane(['1','2','-5'], '3')
-s = LinearSystem([p1,p2,p3])
-t = s.compute_triangular_form()
-if not (t[0] == Plane(['1','-1','1'], '2') and
-        t[1] == Plane(['0','1','1'], '1') and
-        t[2] == Plane(['0','0','-9'], '-2')):
-    print ('test case 4 failed')
-
-
-p1 = Plane(['1','1','1'], '1')
-p2 = Plane(['0','1','1'], '2')
-s = LinearSystem([p1,p2])
-r = s.compute_rref()
-if not (r[0] == Plane(['1','0','0'], '-1') and
-        r[1] == p2):
-    print ('test case 1 failed')
-
-p1 = Plane(['1','1','1'], '1')
-p2 = Plane(['1','1','1'], '2')
-s = LinearSystem([p1,p2])
-r = s.compute_rref()
-if not (r[0] == p1 and
-        r[1] == Plane(['0','0','0'], '1')):
-    print ('test case 2 failed')
-
-p1 = Plane(['1','1','1'], '1')
-p2 = Plane(['0','1','0'], '2')
-p3 = Plane(['1','1','-1'], '3')
-p4 = Plane(['1','0','-2'], '2')
-s = LinearSystem([p1,p2,p3,p4])
-r = s.compute_rref()
-if not (r[0] == Plane(['1','0','0'], '0') and
-        r[1] == p2 and
-        r[2] == Plane(['0','0','-2'], '2') and
-        r[3] == Plane(['0','0','0'], '0')):
-    print ('test case 3 failed')
-
-p1 = Plane(['0','1','1'], '1')
-p2 = Plane(['1','-1','1'], '2')
-p3 = Plane(['1','2','-5'], '3')
-s = LinearSystem([p1,p2,p3])
-r = s.compute_rref()
-if not (r[0] == Plane(['1','0','0'], Decimal('23')/Decimal('9')) and
-        r[1] == Plane(['0','1','0'], Decimal('7')/Decimal('9')) and
-        r[2] == Plane(['0','0','1'], Decimal('2')/Decimal('9'))):
-    print ('test case 4 failed')
